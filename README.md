@@ -1,5 +1,5 @@
-# Douyu-Player-StickyTop
-斗鱼直播间播放器置顶，需与 sylus【[夜间斗鱼](https://userstyles.world/style/240/nightmode-for-douyu-com) NightMode For Douyu.com】 配合使用，可屏蔽除播放器外所有元素。  
+# 斗鱼直播间播放器置顶
+需与 sylus【[夜间斗鱼](https://userstyles.world/style/240/nightmode-for-douyu-com) NightMode For Douyu.com】 配合使用，可屏蔽除播放器外所有元素。  
 
 v0.51 - 重构代码，新增设置项，可选择是否开启自动网页全屏、自动最高画质和自动选择弹幕配置。  
 v0.30 - 新增自动选择弹幕配置（1/4屏，屏蔽所有特殊弹幕，勾选精简弹幕）。若不想使用，请在源代码里按提示手动注释掉此部分代码。  
