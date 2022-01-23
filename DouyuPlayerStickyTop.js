@@ -1,20 +1,20 @@
 // ==UserScript==
 // @name                                斗鱼直播间播放器置顶
 // @namespace                           https://greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6
-// @version                             0.50
+// @version                             0.5.1
 // @description                         斗鱼直播间播放器置顶，配合sylus【NightMode For Douyu.com 夜间斗鱼】使用可屏蔽除播放器外所有元素
 // @author                              QIUZAIYOU
-// @match	                              *://*.douyu.com/0*
-// @match	                              *://*.douyu.com/1*
-// @match	                              *://*.douyu.com/2*
-// @match	                              *://*.douyu.com/3*
-// @match	                              *://*.douyu.com/4*
-// @match	                              *://*.douyu.com/5*
-// @match	                              *://*.douyu.com/6*
-// @match	                              *://*.douyu.com/7*
-// @match	                              *://*.douyu.com/8*
-// @match	                              *://*.douyu.com/9*
-// @match	                              *://*.douyu.com/topic/*
+// @match	                            *://*.douyu.com/0*
+// @match	                            *://*.douyu.com/1*
+// @match	                            *://*.douyu.com/2*
+// @match	                            *://*.douyu.com/3*
+// @match	                            *://*.douyu.com/4*
+// @match	                            *://*.douyu.com/5*
+// @match	                            *://*.douyu.com/6*
+// @match	                            *://*.douyu.com/7*
+// @match	                            *://*.douyu.com/8*
+// @match	                            *://*.douyu.com/9*
+// @match	                            *://*.douyu.com/topic/*
 // @require                             https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
 // @require                             https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js
 // @resource                            swalStyle                    https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.min.css
@@ -22,6 +22,8 @@
 // @grant                               GM_getValue
 // @grant                               GM_registerMenuCommand
 // @grant                               GM_getResourceText
+// @supportURL                          https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
+// @homepageURL                         https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
 // ==/UserScript==
 
 //【NightMode For Douyu.com 夜间斗鱼：https://userstyles.org/styles/158117
