@@ -1,237 +1,240 @@
-// ==UserScript==
-// @name                                斗鱼直播间播放器置顶
-// @namespace                           https://greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6
-// @version                             0.51
-// @description                         斗鱼直播间播放器置顶，配合sylus【NightMode For Douyu.com 夜间斗鱼】使用可屏蔽除播放器外所有元素
-// @author                              QIUZAIYOU
-// @match	                            *://*.douyu.com/0*
-// @match	                            *://*.douyu.com/1*
-// @match	                            *://*.douyu.com/2*
-// @match	                            *://*.douyu.com/3*
-// @match	                            *://*.douyu.com/4*
-// @match	                            *://*.douyu.com/5*
-// @match	                            *://*.douyu.com/6*
-// @match	                            *://*.douyu.com/7*
-// @match	                            *://*.douyu.com/8*
-// @match	                            *://*.douyu.com/9*
-// @match	                            *://*.douyu.com/topic/*
-// @require                             https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
-// @require                             https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js
-// @resource                            swalStyle                    https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.min.css
-// @grant                               GM_setValue
-// @grant                               GM_getValue
-// @grant                               GM_registerMenuCommand
-// @grant                               GM_getResourceText
-// @supportURL                          https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
-// @homepageURL                         https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
-// ==/UserScript==
 
-//【NightMode For Douyu.com 夜间斗鱼：https://userstyles.org/styles/158117
-$(function() {
-    let util = {
-        getValue(name) {
-            return GM_getValue(name);
-        },
-        setValue(name, value) {
-            GM_setValue(name, value);
-        },
-        exist(selecter) {
-            return Boolean($(selecter))
-        },
-        addStyle(id, tag, css) {
-            tag = tag || 'style';
-            let doc = document,
-                styleDom = doc.getElementById(id);
-            if (styleDom) return;
-            let style = doc.createElement(tag);
-            style.rel = 'stylesheet';
-            style.id = id;
-            tag === 'style' ? style.innerHTML = css : style.href = css;
-            document.head.appendChild(style);
-        },
-    };
-    let main = {
-        initValue() {
-            let value = [{
-                name: 'current_screen_mod',
-                value: 'normal'
-            }, {
-                name: 'selected_screen_mod',
-                value: 'webfullscreen'
-            }, {
-                name: 'auto_web_full_screen',
-                value: true
-            }, {
-                name: 'auto_select_video_highest_quality',
-                value: true
-            }, {
-                name: 'auto_select_danmu_options',
-                value: true
-            }];
-            value.forEach((v) => {
-                if (util.getValue(v.name) === undefined) {
-                    util.setValue(v.name, v.value);
-                }
-            });
-        },
-        playerStickyTop() {
-            $("body").prepend($("header"));
-            $(".layout-Player").attr("id", "layout-Player").css({
-                "width": "1400px",
-                "margin": "0 auto",
-                "margin-top": "80px"
-            });
-            $("header").after($("#layout-Player"));
-        },
-        fixedAside() {
-            let url = $(location).attr('href');
-            let room = /https:\/\/www.douyu.com\/\d+/i;
-            if (room.test(url)) {
-                $("header").after($("#js-aside"));
-                $("header").after($("#js-aside-state"));
-            } else {
-                return false;
-            }
-        },
-        getCurrentScreenMod() {
-            let mutationObserver = new MutationObserver(() => {
-                let bodyClass = $("body").attr("class") || 'normal';
-                if (bodyClass.includes('is-fullScreenPage')) {
-                    util.setValue('current_screen_mod', 'webfullscreen')
+
+    // ==UserScript==
+    // @name                                斗鱼直播间播放器置顶
+    // @namespace                           https://greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6
+    // @version                             0.51
+    // @description                         需与 sylus【[夜间斗鱼](https://userstyles.world/style/240/nightmode-for-douyu-com) NightMode For Douyu.com】 配合使用，可屏蔽除播放器外所有元素。
+    // @author                              QIUZAIYOU
+    // @match	                            *://*.douyu.com/0*
+    // @match	                            *://*.douyu.com/1*
+    // @match	                            *://*.douyu.com/2*
+    // @match	                            *://*.douyu.com/3*
+    // @match	                            *://*.douyu.com/4*
+    // @match	                            *://*.douyu.com/5*
+    // @match	                            *://*.douyu.com/6*
+    // @match	                            *://*.douyu.com/7*
+    // @match	                            *://*.douyu.com/8*
+    // @match	                            *://*.douyu.com/9*
+    // @match	                            *://*.douyu.com/topic/*
+    // @require                             https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
+    // @require                             https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js
+    // @resource                            swalStyle                    https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.min.css
+    // @grant                               GM_setValue
+    // @grant                               GM_getValue
+    // @grant                               GM_registerMenuCommand
+    // @grant                               GM_getResourceText
+    // @supportURL                          https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
+    // @homepageURL                         https://github.com/QIUZAIYOU/Douyu-Player-StickyTop
+    // ==/UserScript==
+     
+    //【NightMode For Douyu.com 夜间斗鱼：https://userstyles.org/styles/158117
+    $(function() {
+        let util = {
+            getValue(name) {
+                return GM_getValue(name);
+            },
+            setValue(name, value) {
+                GM_setValue(name, value);
+            },
+            exist(selecter) {
+                return Boolean($(selecter))
+            },
+            addStyle(id, tag, css) {
+                tag = tag || 'style';
+                let doc = document,
+                    styleDom = doc.getElementById(id);
+                if (styleDom) return;
+                let style = doc.createElement(tag);
+                style.rel = 'stylesheet';
+                style.id = id;
+                tag === 'style' ? style.innerHTML = css : style.href = css;
+                document.head.appendChild(style);
+            },
+        };
+        let main = {
+            initValue() {
+                let value = [{
+                    name: 'current_screen_mod',
+                    value: 'normal'
+                }, {
+                    name: 'selected_screen_mod',
+                    value: 'webfullscreen'
+                }, {
+                    name: 'auto_web_full_screen',
+                    value: true
+                }, {
+                    name: 'auto_select_video_highest_quality',
+                    value: true
+                }, {
+                    name: 'auto_select_danmu_options',
+                    value: true
+                }];
+                value.forEach((v) => {
+                    if (util.getValue(v.name) === undefined) {
+                        util.setValue(v.name, v.value);
+                    }
+                });
+            },
+            playerStickyTop() {
+                $("body").prepend($("header"));
+                $(".layout-Player").attr("id", "layout-Player").css({
+                    "width": "1400px",
+                    "margin": "0 auto",
+                    "margin-top": "80px"
+                });
+                $("header").after($("#layout-Player"));
+            },
+            fixedAside() {
+                let url = $(location).attr('href');
+                let room = /https:\/\/www.douyu.com\/\d+/i;
+                if (room.test(url)) {
+                    $("header").after($("#js-aside"));
+                    $("header").after($("#js-aside-state"));
                 } else {
-                    util.setValue('current_screen_mod', 'normal')
+                    return false;
                 }
-            });
-            mutationObserver.observe($("body")[0], {
-                attributes: true,
-            });
-        },
-        autoSelectScreenMod() {
-            let selected_screen_mod = util.getValue('selected_screen_mod')
-            if (selected_screen_mod) {
-                let current_screen_mod = util.getValue('current_screen_mod');
-                let selected_screen_mod = util.getValue('selected_screen_mod');
-                let openWebFullScreenButton = $("[title='网页全屏'][class*='wfs']");
-                if (selected_screen_mod === 'webfullscreen' && current_screen_mod !== 'webfullscreen') {
-                    openWebFullScreenButton.click();
-                    // console.log("screen done")
-                }
-            }
-        },
-        autoSelectVideoHightestQuality() {
-            let auto_select_video_highest_quality = util.getValue('auto_select_video_highest_quality');
-            let hightestQualityButton = $('[class*="rate"] > [class*="tip"] > ul > li').eq(0);
-            let hightestQualityButtonClass = hightestQualityButton.attr('class') || 'normal';
-            if (auto_select_video_highest_quality && !hightestQualityButtonClass.includes('selected')) {
-                hightestQualityButton.click();
-                // console.log("quality done")
-            }
-        },
-        autoSelectDanmuOptions() {
-            let auto_select_danmu_options = util.getValue('auto_select_danmu_options')
-            if (auto_select_danmu_options) {
-                $(".noMcsettingPanel-697312 .iconBtn-70d178").each(function() {
-                    let styleCont = $(this).attr("style");
-                    let labelColor = $(this).children("label").attr("style");
-                    let imgList = ['quarterscreen_84589b', 'bigforbid_5d2d1c', 'topforbid_f08785', 'bottomforbid_9b3f00', 'roleforbid_08998e'];
-                    for (let i = 0; i < imgList.length; i++) {
-                        if (styleCont.includes(imgList[i]) & labelColor.includes("204")) {
-                            $(this).children("label").click()
-                        }
-                    }
-                    $(".simpleDanmu-a83422 span.icon-d798db + label.simpleLabel-c5c1e1").click()
-                });
-                // console.log("danmu done")
-            }
-        },
-        registerMenuCommand() {
-            GM_registerMenuCommand('设置', () => {
-                let html =
-                    `
-                <div style="font-size: 1em;">
-                      <label class="player-modify-setting-label">默认网页全屏<input type="checkbox" id="Auto-Screen-Mod"   ${util.getValue('auto_web_full_screen') ? 'checked' : ''}></label>
-                  <label class="player-modify-setting-label">自动选择最高画质<input type="checkbox" id="Auto-Quality" ${util.getValue('auto_select_video_highest_quality') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
-                  <label class="player-modify-setting-label">自动选择弹幕配置<input type="checkbox" id="Auto-Select-Danmu-Options" ${util.getValue('auto_select_danmu_options') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
-                  <span class="player-modify-setting-tips" style="flex-direction: column;"><span>默认为：1/4屏、弹幕屏蔽全开、开启精简弹幕；此为本人习惯配置，若需更改请取消选择此项，并按自己习惯调整，斗鱼会记住。</span>
-                </div>
-                `;
-                Swal.fire({
-                    title: '播放页调整设置',
-                    html,
-                    icon: 'info',
-                    showCloseButton: true,
-                    confirmButtonText: '保存',
-                    footer: '<div style="text-align: center;font-size: 1.25em;">此脚本需与<a href="//userstyles.world/style/240/nightmode-for-douyu-com" target="_blank"> 夜间斗鱼 </a>配合使用 - <a href="//greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6" target="_blank">检查更新</a></div>',
-                }).then((res) => {
-                    res.isConfirmed && location.reload(true);
-                });
-                $('#Auto-Select-Danmu-Options').change((e) => {
-                    util.setValue('auto_select_danmu_options', e.target.checked);
-                    // console.log(util.getValue('auto_select_danmu_options'))
-                });
-                $('#Auto-Screen-Mod').change((e) => {
-                    util.setValue('auto_web_full_screen', e.target.checked);
-                });
-                $('#Auto-Quality').change((e) => {
-                    util.setValue('auto_select_video_highest_quality', e.target.checked);
-                });
-            });
-        },
-        addPluginStyle() {
-            let style = `
-            .swal2-popup{width: 34em;}
-            .swal2-html-container{margin: 0;padding: 10px;width: 100%;box-sizing: border-box;}
-            .swal2-close{top: 5px;right: 3px;}
-            .swal2-actions{margin: 7px auto 0;}
-            .swal2-icon.swal2-info.swal2-icon-show{display: none !important;}
-            .player-modify-container,.swal2-container { z-index: 999999999!important }
-            .player-modify-popup { font-size: 14px !important }
-            .player-modify-setting-label { display: flex;align-items: center;justify-content: space-between;padding-top: 20px; }
-            .player-modify-setting-checkbox { width: 16px;height: 16px; }
-            .player-modify-setting-tips{width: 100%;display: flex;align-items: center;padding: 5px;margin-top: 10px;background: #f5f5f5;box-sizing: border-box;color: #666;border-radius: 2px;text-align: left;}
-            .player-modify-setting-tips svg{margin-right: 5px}
-            `;
-            if (document.head) {
-                util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
-                util.addStyle('player-modify-style', 'style', style);
-            }
-            const headObserver = new MutationObserver(() => {
-                util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
-                util.addStyle('player-modify-style', 'style', style);
-            });
-            headObserver.observe(document.head, { childList: true, subtree: true });
-        },
-        isTopWindow() {
-            return window.self === window.top;
-        },
-        init() {
-            this.initValue();
-            this.addPluginStyle();
-            this.playerStickyTop();
-            this.fixedAside();
-            this.getCurrentScreenMod();
-            let applyChange = setInterval(() => {
-                let auto_web_full_screen = util.getValue('auto_web_full_screen')
-                let bodyClass = $("body").attr("class") || 'normal';
-                let hightestQualityButtonClass = $('[class*="rate"] > [class*="tip"] > ul > li').eq(0).attr('class') || 'normal'
-                if (util.exist("[title='网页全屏']")) {
-                    if (auto_web_full_screen) {
-                        main.autoSelectDanmuOptions();
-                        main.autoSelectVideoHightestQuality();
-                        main.autoSelectScreenMod();
-                        if (bodyClass.includes('is-fullScreenPage')) {
-                            clearInterval(applyChange)
-                        }
+            },
+            getCurrentScreenMod() {
+                let mutationObserver = new MutationObserver(() => {
+                    let bodyClass = $("body").attr("class") || 'normal';
+                    if (bodyClass.includes('is-fullScreenPage')) {
+                        util.setValue('current_screen_mod', 'webfullscreen')
                     } else {
-                        main.autoSelectDanmuOptions();
-                        main.autoSelectVideoHightestQuality();
-                        if (hightestQualityButtonClass.includes('selected'))
-                            clearInterval(applyChange)
+                        util.setValue('current_screen_mod', 'normal')
+                    }
+                });
+                mutationObserver.observe($("body")[0], {
+                    attributes: true,
+                });
+            },
+            autoSelectScreenMod() {
+                let selected_screen_mod = util.getValue('selected_screen_mod')
+                if (selected_screen_mod) {
+                    let current_screen_mod = util.getValue('current_screen_mod');
+                    let selected_screen_mod = util.getValue('selected_screen_mod');
+                    let openWebFullScreenButton = $("[title='网页全屏'][class*='wfs']");
+                    if (selected_screen_mod === 'webfullscreen' && current_screen_mod !== 'webfullscreen') {
+                        openWebFullScreenButton.click();
+                        // console.log("screen done")
                     }
                 }
-            }, 1000);
-            this.registerMenuCommand();
-        },
-    }
-    main.init();
-});
+            },
+            autoSelectVideoHightestQuality() {
+                let auto_select_video_highest_quality = util.getValue('auto_select_video_highest_quality');
+                let hightestQualityButton = $('[class*="rate"] > [class*="tip"] > ul > li').eq(0);
+                let hightestQualityButtonClass = hightestQualityButton.attr('class') || 'normal';
+                if (auto_select_video_highest_quality && !hightestQualityButtonClass.includes('selected')) {
+                    hightestQualityButton.click();
+                    // console.log("quality done")
+                }
+            },
+            autoSelectDanmuOptions() {
+                let auto_select_danmu_options = util.getValue('auto_select_danmu_options')
+                if (auto_select_danmu_options) {
+                    $(".noMcsettingPanel-697312 .iconBtn-70d178").each(function() {
+                        let styleCont = $(this).attr("style");
+                        let labelColor = $(this).children("label").attr("style");
+                        let imgList = ['quarterscreen_84589b', 'bigforbid_5d2d1c', 'topforbid_f08785', 'bottomforbid_9b3f00', 'roleforbid_08998e'];
+                        for (let i = 0; i < imgList.length; i++) {
+                            if (styleCont.includes(imgList[i]) & labelColor.includes("204")) {
+                                $(this).children("label").click()
+                            }
+                        }
+                        $(".simpleDanmu-a83422 span.icon-d798db + label.simpleLabel-c5c1e1").click()
+                    });
+                    // console.log("danmu done")
+                }
+            },
+            registerMenuCommand() {
+                GM_registerMenuCommand('设置', () => {
+                    let html =
+                        `
+                    <div style="font-size: 1em;">
+                          <label class="player-modify-setting-label">默认网页全屏<input type="checkbox" id="Auto-Screen-Mod"   ${util.getValue('auto_web_full_screen') ? 'checked' : ''}></label>
+                      <label class="player-modify-setting-label">自动选择最高画质<input type="checkbox" id="Auto-Quality" ${util.getValue('auto_select_video_highest_quality') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
+                      <label class="player-modify-setting-label">自动选择弹幕配置<input type="checkbox" id="Auto-Select-Danmu-Options" ${util.getValue('auto_select_danmu_options') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
+                      <span class="player-modify-setting-tips" style="flex-direction: column;"><span>默认为：1/4屏、弹幕屏蔽全开、开启精简弹幕；此为本人习惯配置，若需更改请取消选择此项，并按自己习惯调整，斗鱼会记住。</span>
+                    </div>
+                    `;
+                    Swal.fire({
+                        title: '播放页调整设置',
+                        html,
+                        icon: 'info',
+                        showCloseButton: true,
+                        confirmButtonText: '保存',
+                        footer: '<div style="text-align: center;font-size: 1.25em;">此脚本需与<a href="//userstyles.world/style/240/nightmode-for-douyu-com" target="_blank"> 夜间斗鱼 </a>配合使用 - <a href="//greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6" target="_blank">检查更新</a></div>',
+                    }).then((res) => {
+                        res.isConfirmed && location.reload(true);
+                    });
+                    $('#Auto-Select-Danmu-Options').change((e) => {
+                        util.setValue('auto_select_danmu_options', e.target.checked);
+                        // console.log(util.getValue('auto_select_danmu_options'))
+                    });
+                    $('#Auto-Screen-Mod').change((e) => {
+                        util.setValue('auto_web_full_screen', e.target.checked);
+                    });
+                    $('#Auto-Quality').change((e) => {
+                        util.setValue('auto_select_video_highest_quality', e.target.checked);
+                    });
+                });
+            },
+            addPluginStyle() {
+                let style = `
+                .swal2-popup{width: 34em;}
+                .swal2-html-container{margin: 0;padding: 10px;width: 100%;box-sizing: border-box;}
+                .swal2-close{top: 5px;right: 3px;}
+                .swal2-actions{margin: 7px auto 0;}
+                .swal2-icon.swal2-info.swal2-icon-show{display: none !important;}
+                .player-modify-container,.swal2-container { z-index: 999999999!important }
+                .player-modify-popup { font-size: 14px !important }
+                .player-modify-setting-label { display: flex;align-items: center;justify-content: space-between;padding-top: 20px; }
+                .player-modify-setting-checkbox { width: 16px;height: 16px; }
+                .player-modify-setting-tips{width: 100%;display: flex;align-items: center;padding: 5px;margin-top: 10px;background: #f5f5f5;box-sizing: border-box;color: #666;border-radius: 2px;text-align: left;}
+                .player-modify-setting-tips svg{margin-right: 5px}
+                `;
+                if (document.head) {
+                    util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
+                    util.addStyle('player-modify-style', 'style', style);
+                }
+                const headObserver = new MutationObserver(() => {
+                    util.addStyle('swal-pub-style', 'style', GM_getResourceText('swalStyle'));
+                    util.addStyle('player-modify-style', 'style', style);
+                });
+                headObserver.observe(document.head, { childList: true, subtree: true });
+            },
+            isTopWindow() {
+                return window.self === window.top;
+            },
+            init() {
+                this.initValue();
+                this.addPluginStyle();
+                this.playerStickyTop();
+                this.fixedAside();
+                this.getCurrentScreenMod();
+                let applyChange = setInterval(() => {
+                    let auto_web_full_screen = util.getValue('auto_web_full_screen')
+                    let bodyClass = $("body").attr("class") || 'normal';
+                    let hightestQualityButtonClass = $('[class*="rate"] > [class*="tip"] > ul > li').eq(0).attr('class') || 'normal'
+                    if (util.exist("[title='网页全屏']")) {
+                        if (auto_web_full_screen) {
+                            main.autoSelectDanmuOptions();
+                            main.autoSelectVideoHightestQuality();
+                            main.autoSelectScreenMod();
+                            if (bodyClass.includes('is-fullScreenPage')) {
+                                clearInterval(applyChange)
+                            }
+                        } else {
+                            main.autoSelectDanmuOptions();
+                            main.autoSelectVideoHightestQuality();
+                            if (hightestQualityButtonClass.includes('selected'))
+                                clearInterval(applyChange)
+                        }
+                    }
+                }, 1000);
+                this.registerMenuCommand();
+            },
+        }
+        main.init();
+    });
+
