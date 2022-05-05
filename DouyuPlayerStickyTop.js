@@ -2,7 +2,7 @@
 // @name                                斗鱼直播间播放器置顶
 // @license                             GPL-3.0 License
 // @namespace                           https://greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6
-// @version                             0.55
+// @version                             0.60
 // @description                         需与 sylus【[夜间斗鱼](https://userstyles.world/style/240/nightmode-for-douyu-com) NightMode For Douyu.com】 配合使用，可屏蔽除播放器外所有元素。
 // @author                              QIUZAIYOU
 // @match	                              *://*.douyu.com/0*
@@ -16,6 +16,7 @@
 // @match	                              *://*.douyu.com/8*
 // @match	                              *://*.douyu.com/9*
 // @match	                              *://*.douyu.com/topic/*
+// @match	                              *://*.douyu.com/directory/myFollow
 // @require                             https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
 // @require                             https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.all.min.js
 // @resource                            swalStyle                    https://cdn.jsdelivr.net/npm/sweetalert2@11.3.6/dist/sweetalert2.min.css
@@ -266,17 +267,30 @@ $(function () {
         }
       }, 1000);
     },
+    removeMyFollowPageFirstLiAdv(){
+      let findFirstLiAdv = setInterval(() => {
+        if(util.exist(".layout-Cover-list")){
+        $(".layout-Cover-item").has(".AthenaBoothPanel-wrapper").remove()
+        clearInterval(findFirstLiAdv)
+      }
+      },500)
+    },
     isTopWindow () {
       return window.self === window.top;
     },
     init () {
-      this.initValue();
-      this.addPluginStyle();
-      this.playerStickyTop();
-      this.fixedAside();
-      this.getCurrentScreenMod();
-      this.applySetting();
-      this.registerMenuCommand();
+      const url = $(location).attr("href");
+      if(url==="https://www.douyu.com/directory/myFollow"){
+        this.removeMyFollowPageFirstLiAdv();
+      }else{
+        this.initValue();
+        this.addPluginStyle();
+        this.playerStickyTop();
+        this.fixedAside();
+        this.getCurrentScreenMod();
+        this.applySetting();
+        this.registerMenuCommand();
+      }
     },
   }
   main.init();
