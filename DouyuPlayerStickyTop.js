@@ -280,7 +280,7 @@ $(function () {
     },
     init () {
       const url = $(location).attr("href");
-      if(url==="https://www.douyu.com/directory/myFollow"){
+      if(url.includes("myFollow")){
         this.removeMyFollowPageFirstLiAdv();
       }else{
         this.initValue();
