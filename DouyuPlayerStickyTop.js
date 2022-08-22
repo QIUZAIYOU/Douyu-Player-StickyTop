@@ -175,7 +175,7 @@ $(function () {
             <label class="player-modify-setting-label">自动选择弹幕配置<input type="checkbox" id="Auto-Select-Danmu-Options" ${util.getValue('auto_select_danmu_options') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
             <span class="player-modify-setting-tips"><span>默认为：1/4屏、弹幕屏蔽全开、开启精简弹幕。</span></span>
             <label class="player-modify-setting-label">自动屏蔽全部特效<input type="checkbox" id="Auto-Block-Gift-Effect" ${util.getValue('auto_block_gift_effect') ? 'checked' : ''} class="player-modify-setting-checkbox" style="width:auto!important;"></label>
-            <span class="player-modify-setting-tips"><span>以上两项为本人习惯配置，若需更改请取消选择此项，并按自己习惯调整，斗鱼会记住。</span></span>
+            <span class="player-modify-setting-tips"><span>以上选择为本人习惯配置，若需更改请取消选择此项，并按自己习惯调整，斗鱼会记住。</span></span>
           </div>`;
         Swal.fire({
           title: '斗鱼直播间播放器置顶',
