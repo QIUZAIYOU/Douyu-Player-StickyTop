@@ -2,7 +2,7 @@
 // @name                                斗鱼直播间播放器置顶
 // @license                             GPL-3.0 License
 // @namespace                           https://greasyfork.org/zh-CN/scripts/399600-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%92%AD%E6%94%BE%E5%99%A8%E7%BD%AE%E9%A1%B6
-// @version                             0.61
+// @version                             0.62
 // @description                         需与 sylus【[夜间斗鱼](https://userstyles.world/style/240/nightmode-for-douyu-com) NightMode For Douyu.com】 配合使用，可屏蔽除播放器外所有元素。
 // @author                              QIUZAIYOU
 // @match	                              *://*.douyu.com/0*
@@ -130,7 +130,7 @@ $(function () {
     },
     autoSelectVideoHightestQuality () {
       let auto_select_video_highest_quality = util.getValue('auto_select_video_highest_quality');
-      let hightestQualityButton = $('[class*="rate"] > [class*="tip"] > ul > li').eq(0);
+      let hightestQualityButton = $('[title="清晰度"] > [class*="tip"] > [class*="tipItem"] > ul > li').eq(0);
       let hightestQualityButtonClass = hightestQualityButton.attr('class') || 'normal';
       if (auto_select_video_highest_quality && !hightestQualityButtonClass.includes('selected')) {
         hightestQualityButton.click();
@@ -266,7 +266,7 @@ $(function () {
               clearInterval(applyChange)
           }
         }
-      }, 1000);
+      }, 500);
     },
     removeMyFollowPageFirstLiAdv(){
       let findFirstLiAdv = setInterval(() => {
