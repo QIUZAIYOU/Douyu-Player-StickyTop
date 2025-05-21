@@ -1,10 +1,9 @@
 const getPageTypePrefix = () => {
     const { host, pathname, origin } = window.location
     const strategies = [
-        { test: () => /^\/video\//.test(pathname), type: '播放页调整' },
-        { test: () => /^\/bangumi\//.test(pathname), type: '番剧页调整' },
-        { test: () => host === 'www.bilibili.com' && pathname === '/', type: '首页调整' },
-        { test: () => origin === 'https://t.bilibili.com', type: '动态页调整' }
+        { test: () => /^\/topic\//.test(pathname), type: '直播间页调整' },
+        { test: () => /^\/MyFollow\//.test(pathname), type: '关注页调整' },
+        { test: () => /^\/search\//.test(pathname), type: '搜索结果页调整' }
     ]
     const matched = strategies.find(s => s.test())
     return matched?.type || '其他页调整'

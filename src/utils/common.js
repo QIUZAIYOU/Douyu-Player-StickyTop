@@ -4,7 +4,7 @@ const logger = new LoggerService('Common')
 export const detectivePageType = () => {
     const { host, pathname, origin } = window.location
     if (pathname.startsWith('/topic/')) return 'live'
-    if (pathname.startsWith('/directory/')) return 'follow'
+    if (pathname.startsWith('/directory/MyFollow')) return 'follow'
     if (pathname.startsWith('/search/')) return 'search'
     return 'other'
 }
